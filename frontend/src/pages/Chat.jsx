@@ -23,7 +23,7 @@ function Chat() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch('https://chat-global-r0ay.onrender.com');
+        const response = await fetch('https://chat-global-r0ay.onrender.com/api/messages/history');
         const data = await response.json();
         
         if (response.ok) {

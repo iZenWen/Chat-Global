@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'; // 1. Importamos useRef
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:3000');
+const socket = io('https://chat-global-r0ay.onrender.com');
 
 function Chat() {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ function Chat() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/messages/history');
+        const response = await fetch('https://chat-global-r0ay.onrender.com');
         const data = await response.json();
         
         if (response.ok) {

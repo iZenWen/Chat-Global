@@ -1,0 +1,182 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #1e1e2f; /* Fondo oscuro elegante */
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: center;
+  width: 300px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+input {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+button {
+  padding: 0.8rem;
+  background: #4f46e5; /* Azul moderno */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #4338ca;
+}
+
+a {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* --- ESTILOS DEL CHAT (DÍA 7) --- */
+
+.chat-container {
+  background: #ffffff;
+  width: 450px;
+  height: 600px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-header {
+  background: #4f46e5;
+  color: white;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #4338ca;
+}
+
+.chat-header h3 {
+  margin: 0;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logout-btn {
+  background: #ef4444; /* Rojo para salir */
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.logout-btn:hover {
+  background: #dc2626;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto; /* Permite scroll si hay muchos mensajes */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #f3f4f6; /* Fondo gris claro para los mensajes */
+}
+
+.message {
+  max-width: 75%;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.message .sender {
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-bottom: 0.2rem;
+  color: #4f46e5;
+}
+
+.message .text {
+  margin: 0;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+/* Mensaje enviado por otros (Alineado a la izquierda) */
+.message.other {
+  align-self: flex-start;
+  background: white;
+  border-bottom-left-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Mensaje enviado por mí (Alineado a la derecha en color azul) */
+.message.mine {
+  align-self: flex-end;
+  background: #4f46e5;
+  color: white;
+  border-bottom-right-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.message.mine .sender {
+  color: #c7d2fe; /* Color más claro para mi nombre */
+}
+
+/* Barra inferior de escritura */
+.chat-input-area {
+  display: flex;
+  padding: 1rem;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  gap: 0.5rem;
+}
+
+.chat-input-area input {
+  flex: 1;
+  padding: 0.8rem;
+}
+
+.chat-input-area button {
+  padding: 0 1.5rem;
+}
+
+/* --- MENSAJES DE ERROR VISUALES --- */
+.error-text {
+  color: #dc2626; /* Rojo oscuro */
+  background-color: #fee2e2; /* Fondo rojo clarito */
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin: 0;
+  border: 1px solid #f87171;
+}

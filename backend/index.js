@@ -53,6 +53,18 @@ io.on('connection', (socket) => {
     } catch (error) {
       console.error("Error guardando el mensaje:", error);
     }
+
+    // 1. Escuchamos cuando alguien empieza a escribir
+    socket.on('typing', (username) => {
+      // Usamos socket.broadcast.emit para avisarle a TODOS los demás, excepto al que está escribiendo
+      socket.broadcast.emit('user_typing', username);
+    });
+
+    // 2. Escuchamos cuando alguien deja de escribir
+    socket.on('stop_typing', () => {
+      socket.broadcast.emit('user_stopped_typing');
+    });
+
   });
 
   socket.on('disconnect', () => {

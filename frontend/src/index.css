@@ -180,3 +180,17 @@ a {
   margin: 0;
   border: 1px solid #f87171;
 }
+
+/* --- ANIMACIÓN DE ESCRIBIENDO --- */
+.typing-indicator {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0.2rem 1rem !important;
+  color: #6b7280; /* Texto gris */
+  animation: pulse 1.5s infinite; /* Animación de latido */
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}

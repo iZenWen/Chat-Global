@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'; // 1. Importamos useRef
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 
@@ -10,16 +10,18 @@ function Chat() {
 
   const [currentMessage, setCurrentMessage] = useState('');
   const [messageList, setMessageList] = useState([]);
-
-  // 2. NUEVO: Creamos un "ancla" invisible al final del chat
+  
+  // NUEVO: Estado para saber quién está escribiendo
+  const [typingUser, setTypingUser] = useState(''); 
   const messagesEndRef = useRef(null);
+  
+  // NUEVO: Referencia para controlar el cronómetro
+  const typingTimeoutRef = useRef(null); 
 
-  // 3. NUEVO: Cada vez que la lista de mensajes cambie, bajamos el scroll automáticamente
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messageList]);
+  }, [messageList, typingUser]); // Añadimos typingUser para que baje el scroll si aparece el aviso
 
-  // Historial
   useEffect(() => {
     const fetchHistory = async () => {
       try {
@@ -37,16 +39,24 @@ function Chat() {
     fetchHistory();
   }, []);
 
-  // Escuchar mensajes en vivo
   useEffect(() => {
     const handleReceiveMessage = (data) => {
       setMessageList((list) => [...list, data]);
+      setTypingUser(''); // Si recibimos un mensaje, quitamos el "escribiendo..."
     };
 
+    // NUEVO: Escuchamos los avisos de escritura
+    const handleTyping = (user) => setTypingUser(user);
+    const handleStopTyping = () => setTypingUser('');
+
     socket.on('receive_message', handleReceiveMessage);
+    socket.on('user_typing', handleTyping);
+    socket.on('user_stopped_typing', handleStopTyping);
     
     return () => {
       socket.off('receive_message', handleReceiveMessage);
+      socket.off('user_typing', handleTyping);
+      socket.off('user_stopped_typing', handleStopTyping);
     };
   }, []);
 
@@ -54,6 +64,24 @@ function Chat() {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     navigate('/');
+  };
+
+  // NUEVO: Función inteligente para cuando tecleamos
+  const handleInputChange = (e) => {
+    setCurrentMessage(e.target.value);
+
+    // Avisamos que estamos escribiendo
+    socket.emit('typing', username);
+
+    // Borramos el cronómetro anterior
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    // Creamos un nuevo cronómetro de 2 segundos
+    typingTimeoutRef.current = setTimeout(() => {
+      socket.emit('stop_typing');
+    }, 2000);
   };
 
   const sendMessage = async (e) => {
@@ -66,6 +94,7 @@ function Chat() {
       };
 
       socket.emit('send_message', messageData);
+      socket.emit('stop_typing'); // Al enviar, dejamos de escribir instantáneamente
       setCurrentMessage('');
     }
   };
@@ -91,7 +120,14 @@ function Chat() {
             </div>
           );
         })}
-        {/* 4. NUEVO: Ponemos el "ancla" invisible justo al final de los mensajes */}
+        
+        {/* NUEVO: El indicador visual de que alguien escribe */}
+        {typingUser && (
+          <div className="message other typing-indicator">
+            <p className="text"><em>{typingUser} está escribiendo...</em> ✍️</p>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -100,7 +136,7 @@ function Chat() {
           type="text" 
           placeholder="Escribe un mensaje aquí..." 
           value={currentMessage}
-          onChange={(e) => setCurrentMessage(e.target.value)} 
+          onChange={handleInputChange} // Conectamos el input a nuestra nueva función
         />
         <button type="submit">Enviar</button>
       </form>

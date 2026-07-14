@@ -37,7 +37,7 @@ mongoose.connect(process.env.MONGO_URI)
 io.on('connection', (socket) => {
   console.log(`🟢 Nuevo dispositivo conectado. ID: ${socket.id}`);
 
-  // Escuchamos los mensajes que llegan desde el frontend
+  // Evento 1: Escuchamos los mensajes que llegan desde el frontend
   socket.on('send_message', async (data) => {
     try {
       // 1. Guardar el mensaje en MongoDB
@@ -47,26 +47,26 @@ io.on('connection', (socket) => {
       });
       await newMessage.save();
 
-      // 2. Rebotar el mensaje a TODOS los usuarios conectados (incluyendo al que lo envió)
+      // 2. Rebotar el mensaje a TODOS los usuarios
       io.emit('receive_message', data);
       
     } catch (error) {
       console.error("Error guardando el mensaje:", error);
     }
+  }); // <--- AQUÍ CERRAMOS SEND_MESSAGE CORRECTAMENTE
 
-    // 1. Escuchamos cuando alguien empieza a escribir
-    socket.on('typing', (username) => {
-      // Usamos socket.broadcast.emit para avisarle a TODOS los demás, excepto al que está escribiendo
-      socket.broadcast.emit('user_typing', username);
-    });
-
-    // 2. Escuchamos cuando alguien deja de escribir
-    socket.on('stop_typing', () => {
-      socket.broadcast.emit('user_stopped_typing');
-    });
-
+  // Evento 2: Escuchamos cuando alguien empieza a escribir
+  socket.on('typing', (username) => {
+    // Usamos socket.broadcast.emit para avisarle a TODOS los demás, excepto al que escribe
+    socket.broadcast.emit('user_typing', username);
   });
 
+  // Evento 3: Escuchamos cuando alguien deja de escribir
+  socket.on('stop_typing', () => {
+    socket.broadcast.emit('user_stopped_typing');
+  });
+
+  // Evento 4: Desconexión
   socket.on('disconnect', () => {
     console.log(`🔴 Dispositivo desconectado. ID: ${socket.id}`);
   });

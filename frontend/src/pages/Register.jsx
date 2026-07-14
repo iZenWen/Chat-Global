@@ -12,7 +12,7 @@ function Register() {
     setError('');
 
     try {
-      const response = await fetch('https://chat-global-r0ay.onrender.com', {
+      const response = await fetch('https://chat-global-r0ay.onrender.com/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
